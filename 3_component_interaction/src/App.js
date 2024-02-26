@@ -1,7 +1,7 @@
 //App.js
 import React from 'react';
 import {comments} from './commentData';
-import {Card} from './Card';
+import Card from './Card';
 
 function App() {
   return (
