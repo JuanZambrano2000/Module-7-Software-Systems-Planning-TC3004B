@@ -6,7 +6,8 @@ import './index.css';
 
 const root = createRoot(document.getElementById('root'));
 const render = () => {
-  root.render(<App/>);
+  root.render(<App state={store.getState()} dispatch={store.dispatch}/>);
 }
 
+store.subscribe(render);
 render();
