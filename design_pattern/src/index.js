@@ -1,12 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import GuineaPigs from "./components/GuineaPigs";
-import GuineaPigsContainer from "./containers/GuineaPigsContainer";
+import App from './App';
 
-{/*<GuineaPigs />*/}
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    
-    <GuineaPigsContainer />
+    <App />
 );
