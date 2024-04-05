@@ -4,8 +4,6 @@ import { useState, useEffect } from "react";
 const useTheme = () => {
   const [theme, setTheme] = useState("light");
 
-  const isDarkTheme = theme === "dark";
-
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
@@ -14,6 +12,7 @@ const useTheme = () => {
     setTheme(theme === "light" ? "dark" : "light");
   };
 
+  const isDarkTheme = theme === "dark";
   return { onToggleTheme, isDarkTheme };
 };
 
