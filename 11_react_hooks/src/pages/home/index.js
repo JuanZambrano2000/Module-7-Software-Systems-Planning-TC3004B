@@ -1,69 +1,56 @@
 import React, { useEffect, useState } from 'react';
-import { getPets } from '../../api/petfinder';
+import { useParams } from 'react-router-dom';
+import { getPetDetails } from '../../api/petfinder';
 import Hero from '../../components/hero';
 
-// import useParams
-// import Link
-
-const HomePage = () => {
-  const [data, setData] = useState(null);
-  const type = ''; // Fix me!
+const PetDetailsPage = () => {
+  const [data, setData] = useState();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const { id } = useParams();
 
   useEffect(() => {
     async function getPetsData() {
-      const petsData = await getPets(type);
-      setData(petsData);
+      try {
+        const petsData = await getPetDetails(id);
+        setData(petsData);
+        setError(false);
+      } catch (e) {
+        setError(true);
+      }
+      setLoading(false);
     }
 
     getPetsData();
-  }, [type]);
-
-  if (!data) {
-    return <h2>Loading...</h2>;
-  }
+  }, [id]);
 
   return (
-    <div className="page">
+    <div>
       <Hero />
-      <h3>
-        <span className="pet-type-label">{type ? `${type}s` : 'Pets'}</span>{' '}
-        available for adoption near you
-      </h3>
-
-      {data.length ? (
-        <div className="grid">
-          {data.map((animal) => (
-            <a // Change me to a Link!
-              key={animal.id}
-              href={`/${animal.type.toLowerCase()}/${animal.id}`}
-              className="pet"
-            >
-              <article>
-                <div className="pet-image-container">
-                  {
-                    <img
-                      className="pet-image"
-                      src={
-                        animal.photos[0]?.medium ||
-                        '/missing-animal.png'
-                      }
-                      alt=""
-                    />
-                  }
-                </div>
-                <h3>{animal.name}</h3>
-                <p>Breed: {animal.breeds.primary}</p>
-                <p>Color: {animal.colors.primary}</p>
-                <p>Gender: {animal.gender}</p>
-              </article>
-            </a> // Don't forget to change me!
-          ))}
+      {loading ? (
+        <h3>Loading...</h3>
+      ) : error ? (
+        <div>
+          <h3>404: Who let the dogs out?</h3>
+          <p>The pet you are looking for is not available. Try a different pet.</p>
         </div>
       ) : (
-        <p className="prompt">No {type}s available for adoption now.</p>
+        <div className="pet-detail">
+          <div className="pet-image-container">
+            <img className="pet-image" src={data.photos[0]?.medium || '/missing-animal.png'} alt="" />
+          </div>
+          <div>
+            <h2>{data.name}</h2>
+            <h3>Breed: {data.breeds.primary}</h3>
+            <p>Color: {data.colors.primary || 'Unknown'}</p>
+            <p>Gender: {data.gender}</p>
+            <h3>Description</h3>
+            <p>{data.description}</p>
+          </div>
+        </div>
       )}
     </div>
   );
 };
 
-export default HomePage;
+export default PetDetailsPage;
